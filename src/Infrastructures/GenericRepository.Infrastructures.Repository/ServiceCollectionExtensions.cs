@@ -9,6 +9,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IFavouriteRepository, FavouriteRepository>();
 
+        services.AddDbContext<ApplicationDbContext>();
+
         return services;
     }
 }

@@ -1,0 +1,14 @@
+@GenericRepository.Api_HostAddress = https://localhost:7189/
+
+POST https://localhost:7189/customers
+Accept: application/json
+
+###
+
+GET https://localhost:7189/customers
+Accept: application/json
+
+###
+
+GET https://localhost:7189/customers/1
+Accept: application/json

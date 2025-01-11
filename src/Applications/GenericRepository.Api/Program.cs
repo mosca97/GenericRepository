@@ -1,3 +1,4 @@
+using GenericRepository.Business;
 using GenericRepository.Domain.Core;
 using GenericRepository.Infrastructures.Repository;
 
@@ -9,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRepositories();
+builder.Services.AddBusiness();
 
 var app = builder.Build();
 
@@ -21,18 +23,32 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/customers", (ICustomerRepository customerRepo) =>
+app.MapPost("/customers", async (ICustomerManager manager) =>
 {
-    customerRepo.UpdateAsync(new() { Id = "c001", Name = "Marco"});
+    await manager.AddAsync(new() { Id = 1, Name = "Marco" });
+
+    return Results.Created();
+})
+.WithName("CreateCustomers")
+.WithOpenApi();
+
+app.MapGet("/customers", (ICustomerManager manager) =>
+{
+    return Results.Ok(manager.GetAll());
 })
 .WithName("GetCustomers")
 .WithOpenApi();
 
-app.MapGet("/favourites", async (IFavouriteRepository favouriteRepo) =>
+app.MapGet("/customers/{id}", async (ICustomerManager manager, int id) =>
 {
-    var favourites = await favouriteRepo.GetAllAsync();
+    var customer = await manager.GetByIdAsync(id);
+
+    if (customer is null)
+        return Results.NotFound();
+
+    return Results.Ok(customer);
 })
-.WithName("GetCustomers")
+.WithName("GetCustomerById")
 .WithOpenApi();
 
 app.Run();
