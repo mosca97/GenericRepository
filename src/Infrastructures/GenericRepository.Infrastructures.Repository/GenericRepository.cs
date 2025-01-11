@@ -1,9 +1,10 @@
 ﻿using GenericRepository.Domain.Core;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace GenericRepository.Infrastructures.Repository;
 
-internal abstract class GenericRepository<Tkey, TDomain, TDatabase>(ApplicationDbContext context)
+internal abstract class GenericRepository<Tkey, TDomain, TDatabase>(DbContext context)
     : IGenericRepository<Tkey, TDomain>
     where TDomain : BaseDto<Tkey>
     where TDatabase : class, new()
